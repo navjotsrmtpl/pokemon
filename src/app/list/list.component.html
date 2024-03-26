@@ -1,0 +1,14 @@
+<div style="padding: 10px;">
+    <h1 style="text-align: center;">Pokemon</h1>
+    <div class="container">
+        <div class="card" *ngFor="let pokemon of pokemons">
+            <mat-card (click)="gotoPage(pokemon)">
+                <mat-card-header>
+                    <mat-card-title>{{ pokemon.name | titlecase}}</mat-card-title>
+                </mat-card-header>
+                <img mat-card-image [src]="pokemon.imageUrl">
+            </mat-card>
+        </div>
+    </div>
+    <div *ngIf="loading" class="loading">Loading...</div>
+</div>
