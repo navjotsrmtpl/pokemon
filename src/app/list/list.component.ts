@@ -15,7 +15,7 @@ export class ListComponent {
   offset = 0;
   limit = 20; // 3 columns * 4 rows
 
-  constructor(private pokeApiService: ApiService, private router: Router) { }
+  constructor(public pokeApiService: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadPokemon();
@@ -31,16 +31,22 @@ export class ListComponent {
 
   loadPokemon(): void {
     if (!this.loading) {
-      this.loading = true;
-      this.pokeApiService.getPokemon(this.offset, this.limit).subscribe(response => {
-
-        this.pokemons = this.pokemons.concat(response.results.map((pokemon: any) => ({
-          name: pokemon.name,
-          imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.url.split('/')[6]}.png`,
-        })));
-        this.offset += this.limit;
-        this.loading = false;
-      });
+      try {
+        this.loading = true;
+        this.pokeApiService.getPokemon(this.offset, this.limit).subscribe(response => {
+          this.pokemons = this.pokemons.concat(response.results.map((pokemon: any) => ({
+            name: pokemon.name,
+            imageUrl: this.pokeApiService.pokemonimage(pokemon.url.split('/')[6]),
+          })));
+          this.offset += this.limit;
+          this.loading = false;
+        }, error => {
+          console.log(error)
+        });
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
   }
 
